@@ -23,7 +23,7 @@
             <div @click="previewVisible = true" class="pre-pic"><img src="../../assets/f7b469124030ece113ae20d65f81ba71.png" alt="" /></div>
           </template>
         </el-table-column>
-        <el-table-column prop="num" label="位置" width="200"> </el-table-column>
+        <el-table-column prop="num" label="排序" width="200"> </el-table-column>
         <el-table-column label="操作" width="400"
           ><template v-slot="">
             <el-button type="primary" @click="editVisible = true">编辑</el-button>
@@ -38,10 +38,12 @@
     </el-dialog>
     <!-- 编辑 -->
     <el-dialog title="编辑图片" :visible.sync="editVisible" width="40%">
-      <p>图片</p>
-      <el-button type="primary">重新上传</el-button>
-      <span>重新上传会覆盖原有图片</span>
-      <div>位置：<el-input placeholder="图片位置"></el-input></div>
+      <div>
+        上传图片：<input ref="upload" type="file" accept="image/*" style="display: none" @change="uploadPreview" /><el-button @click="uploadClick">重新选择图片</el-button
+        ><span style="color: red">&nbsp;重新选择图片会覆盖原先图片</span>
+      </div>
+      <img :src="prePic" alt="" style="max-width: 100%" />
+      <div>图片排序：<el-input placeholder="图片排序"></el-input></div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editVisible = false">取 消</el-button>
         <el-button type="primary" @click="editVisible = false">确 定</el-button>
@@ -55,7 +57,9 @@
         <el-option label="超级电池" value="2"></el-option>
         <el-option label="智慧仓" value="3"></el-option>
       </el-select>
-      <div>位置：<el-input placeholder="图片位置"></el-input></div>
+      <div>上传图片：<input ref="upload" type="file" accept="image/*" style="display: none" @change="uploadPreview" /><el-button @click="uploadClick">选择图片</el-button></div>
+      <img :src="prePic" alt="" style="max-width: 100%" />
+      <div>图片排序：<el-input placeholder="图片排序"></el-input></div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addVisible = false">取 消</el-button>
         <el-button type="primary" @click="addVisible = false">确 定</el-button>
@@ -99,7 +103,16 @@ export default {
       ],
       previewVisible: false,
       editVisible: false,
-      addVisible: false
+      addVisible: false,
+      prePic: ''
+    }
+  },
+  methods: {
+    uploadPreview(e) {
+      this.prePic = URL.createObjectURL(e.target.files[0])
+    },
+    uploadClick() {
+      this.$refs.upload.click()
     }
   }
 }
@@ -117,6 +130,14 @@ export default {
     cursor: pointer;
     img {
       width: 200px;
+    }
+  }
+  .el-input {
+    width: 217px;
+  }
+  .el-dialog {
+    .el-select {
+      margin-bottom: 20px;
     }
   }
 }
